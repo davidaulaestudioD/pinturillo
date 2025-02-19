@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    background-color: #423f44;
+    height: 100vh;
+    margin:0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Noto Sans", serif;
+}
+
+.container-puntos, .container-dibujo, .container-chat {
+    background-color: blanchedalmond;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    margin: 1%;
+}
+
+.container-puntos, .container-chat {
+    width: 20%;
+    height: 63%;
+}
+
+.container-dibujo {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.container-dibujo div {
+    display: flex;
+    justify-content: center;
+}
+
+.divCanva {
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#canvas {
+    background-color: white;
+    cursor: crosshair;
+    border: none;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
