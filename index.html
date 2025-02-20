@@ -11,20 +11,48 @@
     <!--Div para los puntos -->
     <div class="container-puntos">
         <div>Puntos</div>
-
     </div>
+
 
     <!-- Div para el canva del dibujo -->
     <div class="container-dibujo">
         <div>Dibujo</div>
+        <div class="divBotonesCanva">
+            <button id="reset">Resetear</button>
+        </div>
+
+        <div class="container-colores">
+            <button id="colorRojo" data-color="red"></button>
+            <button id="colorAmarillo" data-color="yellow"></button>
+            <button id="colorAzul" data-color="blue"></button>
+            <button id="colorNegro" data-color="black"></button>
+            <button id="colorRosa" data-color="pink"></button>
+            <button id="colorVerde" data-color="green"></button>
+            <button id="colorMarron" data-color="brown"></button>
+            <button id="colorMorado" data-color="purple"></button>
+            <input type="range" id="lineWidth" min="1" max="20" value="2">
+        </div>
+
+        <div class="timer-container">
+            Tiempo restante: <span id="time">45</span>s
+        </div>
+
+        <div class="draw-prompt">
+            ¡Dibuja: <span id="drawItem"></span>!
+        </div>
+
         <div class="divCanva">
-            <canvas id="canvas" width="1150px" height="600px" ></canvas>
+            <canvas id="canvas" width="1000px" height="600px"></canvas>
         </div>
     </div>
+
 
     <!-- Div para el chat -->
     <div class="container-chat">
         <div>Chat</div>
+        <div class="chat">
+
+        </div>
 
     </div>
 
@@ -32,3 +60,7 @@
     <script src="funciones.js"></script>
 </body>
 </html>
+
+
+
+

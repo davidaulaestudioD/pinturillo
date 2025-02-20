@@ -23,6 +23,9 @@ body {
     width: 20%;
     height: 63%;
 }
+.container-chat {
+    flex-direction: column;
+}
 
 .container-dibujo {
     width: 70%;
@@ -44,8 +47,92 @@ body {
 
 #canvas {
     background-color: white;
-    cursor: crosshair;
-    border: none;
+    cursor: pointer;
+    border: 1px solid black;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
+    margin: 15px;
+
+}
+
+/* * {
+    outline: 1px solid red;
+  } */
+
+.container-colores {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+#colorRojo {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: red;
+    width: 25px;
+    height: 25px;
+}
+
+#colorAmarillo {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: yellow;
+    width: 25px;
+    height: 25px;
+}
+
+#colorAzul {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: blue;
+    width: 25px;
+    height: 25px;
+}
+
+#colorNegro {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: black;
+    width: 25px;
+    height: 25px;
+}
+
+#colorRosa {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: pink;
+    width: 25px;
+    height: 25px;
+}
+
+#colorVerde {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: green;
+    width: 25px;
+    height: 25px;
+}
+
+#colorMarron {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: brown;
+    width: 25px;
+    height: 25px;
+}
+
+#colorMorado {
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: purple;
+    width: 25px;
+    height: 25px;
 }
