@@ -85,7 +85,7 @@ $(document).ready(function () {
   
       // Se añade un resumen de la ronda en el div de puntuaciones
       $(".puntuaciones").append(
-        "<p>Ronda " + currentRound + "/" + maxRounds + ": IA: " + roundScoreIA + " puntos, Jugador: " + roundScorePlayer + " puntos</p>"
+        "<p>Ronda " + currentRound + "/" + maxRounds + ": </br>IA: " + roundScoreIA + " puntos,</br> Jugador: " + roundScorePlayer + " puntos</p>"
       );
   
       updateTotalScoreDisplay();
