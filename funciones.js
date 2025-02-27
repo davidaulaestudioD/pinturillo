@@ -12,6 +12,12 @@ $(document).ready(function () {
   var timerInterval;                     // Variable para el intervalo
   var chatInterval; 
 
+  //nuevas variables
+  var currentRound = 1;
+  var maxRounds = 5;
+  var totalScoreIA = 0;
+  var totalScorePlayer = 0;
+
 
   const categorias = [
     { categoria: "Automóviles", opciones: ["Coche", "Moto", "Camión", "Bicicleta", "Furgoneta", "Convertible", "SUV"] },
@@ -29,7 +35,7 @@ $(document).ready(function () {
       categoria: categoriaSeleccionada.categoria,
       opcion: opcion,
       opciones: categoriaSeleccionada.opciones, // Lista de opciones para la simulación del chat
-      text: categoriaSeleccionada.categoria + " - " + opcion
+      text:  opcion
     };  
   }
 
@@ -57,7 +63,7 @@ $(document).ready(function () {
       var guess = currentDraw.opciones[randomIndex];
       
       // Agrega la opción al chat
-      $(".chat").append("<p>" + guess + "</p>");
+      $(".chat").append("<p>Dibujo: " + guess + "</p>");
       
       // Si la opción coincide con la asignada, se notifica y se detienen timer y dibujo
       if (guess === currentDraw.opcion) {
@@ -135,6 +141,11 @@ $(document).ready(function () {
     clearInterval(timerInterval);
     clearInterval(chatInterval);
     startGame();
+  });
+
+  //BOTON LIMPIAR
+  $("#limpiar").on('click', function () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 
   //SELECCIONAR COLOR
