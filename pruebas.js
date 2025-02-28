@@ -1,22 +1,22 @@
 $(document).ready(function () {
-    var $canvas = $('#canvas');            // Obtenemos el canvas como objeto jQuery
-    var canvas = $canvas[0];                 // Obtenemos el elemento DOM
+    var $canvas = $('#canvas');            
+    var canvas = $canvas[0];                
     var ctx = canvas.getContext('2d');
     var drawing = false;
     var lastX = 0;
     var lastY = 0;
-    var colorActual = "#000";                // Color inicial: negro
-    var anchoTrazo = 2;                      // Ancho inicial del trazo
+    var colorActual = "#000";               
+    var anchoTrazo = 2;                   
   
-    var timeLeft = 45;                       // Tiempo inicial por ronda
-    var timerInterval;                       // Intervalo del contador
-    var chatInterval;                        // Intervalo de la simulación del chat
+    var tiempoRestante = 30;               
+    var timerInterval;                    
+    var chatInterval;                        
   
-    // Variables para rondas y puntuaciones
-    var currentRound = 1;
-    var maxRounds = 5;
-    var totalScoreIA = 0;
-    var totalScorePlayer = 0;
+  
+    var rondaActual = 1;
+    var maxRondas = 5;
+    var puntuacionTotalIA = 0;
+    var puntuacionTotalJugador = 0;
   
     const categorias = [
       { categoria: "Automóviles", opciones: ["Coche", "Moto", "Camión", "Bicicleta", "Furgoneta", "Convertible", "SUV"] },
@@ -33,112 +33,108 @@ $(document).ready(function () {
       return {
         categoria: categoriaSeleccionada.categoria,
         opcion: opcion,
-        opciones: categoriaSeleccionada.opciones, // Lista de opciones para la simulación del chat
+        opciones: categoriaSeleccionada.opciones,
         text: opcion
       };  
     }
   
-    // Actualiza el indicador de la ronda en la sección de dibujo
-    function updateRoundDisplay() {
-      $('.container-ronda').text(currentRound + "/" + maxRounds);
+    //ACTUALIZA LA RONDA
+    function actualizarRondas() {
+      $('.container-ronda').text(rondaActual + "/" + maxRondas);
     }
   
-    // Actualiza la sección de total puntuación en tiempo real
-    function updateTotalScoreDisplay() {
+    //ACTUALIZAR EL TOTAL DE LAS PUNTUACIONES, AL ACABAR MARCA EL GANADOR
+    function actualizarPuntuacionesTotales() {
       var $total = $(".totalPuntuacion");
-      $total.find("p").eq(0).html("IA: " + totalScoreIA);
-      $total.find("p").eq(1).html("Jugador: " + totalScorePlayer);
-      if (currentRound === maxRounds) {
-        var winnerText = "";
-        if (totalScoreIA > totalScorePlayer) {
-          winnerText = "La IA gana";
-        } else if (totalScorePlayer > totalScoreIA) {
-          winnerText = "El Jugador gana";
+      $total.find("p").eq(0).html("IA: " + puntuacionTotalIA);
+      $total.find("p").eq(1).html("Jugador: " + puntuacionTotalJugador);
+      if (rondaActual === maxRondas) {
+        var textoGanador = "";
+        if (puntuacionTotalIA > puntuacionTotalJugador) {
+          textoGanador = "IA gana";
+        } else if (puntuacionTotalJugador > puntuacionTotalIA) {
+          textoGanador = "Jugador gana";
         } else {
-          winnerText = "Empate";
+          textoGanador = "Empate tecnico";
         }
-        $total.find("#ganador").html("Ganador: " + winnerText);
+        $total.find("#ganador").html("Ganador: " + textoGanador);
       } else {
         $total.find("#ganador").html("Ganador: ");
       }
       $total.show();
     }
   
-    // Función para terminar la ronda y asignar puntos
-    function endRound(winner) {
+    //TERMINAR RONDA Y DAR PUNTOS, PARA LA IA 10P MAS EL TIEMPO RESTANTE EN PUNTOS, EL JUGADOR, 10P + 20P 
+    function acabarRonda(ganador) {
       clearInterval(timerInterval);
       clearInterval(chatInterval);
       $canvas.off('mousedown mousemove mouseup mouseleave');
   
-      var roundScoreIA = 0;
-      var roundScorePlayer = 0;
-      if (winner === "ia") {
-        // Si la IA acierta, obtiene 10 + los segundos restantes
-        roundScoreIA = 10 + timeLeft;
-      } else if (winner === "player") {
-        // Si se acaba el tiempo y la IA falla, el jugador obtiene 10 + 30
-        roundScorePlayer = 10 + 30;
+      var puntuacionRondaIA = 0;
+      var puntuacionRondaJugador = 0;
+      if (ganador === "ia") {
+        puntuacionRondaIA = 10 + tiempoRestante;
+      } else if (ganador === "player") {
+        puntuacionRondaJugador = 10 + 20;
       }
   
-      totalScoreIA += roundScoreIA;
-      totalScorePlayer += roundScorePlayer;
+      puntuacionTotalIA += puntuacionRondaIA;
+      puntuacionTotalJugador += puntuacionRondaJugador;
   
-      // Se añade un resumen de la ronda en el div de puntuaciones
+      //AÑADE LA PUNTUACION DE CADA RONDA
       $(".puntuaciones").append(
-        "<p>Ronda " + currentRound + "/" + maxRounds + ": </br>IA: " + roundScoreIA + " puntos,</br> Jugador: " + roundScorePlayer + " puntos</p>"
+        "<p>Ronda " + rondaActual + "/" + maxRondas + ": </br>IA: " + puntuacionRondaIA + " puntos,</br> Jugador: " + puntuacionRondaJugador + " puntos</p>"
       );
   
-      updateTotalScoreDisplay();
-  
-      if (currentRound < maxRounds) {
-        currentRound++;
-        updateRoundDisplay(); // Actualiza la visualización de la ronda
+      actualizarPuntuacionesTotales();
+
+
+      //SUMA UNA RONDA E INICIA LA NUEVA, SI ES LA ULTIMA, TERMINA EL JUEGO
+      if (rondaActual < maxRondas) {
+        rondaActual++;
+        actualizarRondas(); 
         setTimeout(function() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          startRound();
+          iniciarRonda();
         }, 2000);
       } else {
-        // Última ronda finalizada: desactivamos los eventos de dibujo
         $canvas.off('mousedown mousemove mouseup mouseleave');
       }
     }
   
-    // INICIAR CONTADOR
+    //INICIAR CONTADOR
     function iniciarContador() {
-      $('#time').text(timeLeft);
+      $('#time').text(tiempoRestante);
       timerInterval = setInterval(function() {
-        if (timeLeft <= 0) {
-          // Si se acaba el tiempo, el jugador gana la ronda
-          endRound("player");
+        if (tiempoRestante <= 0) {
+          acabarRonda("player");
         } else {
-          timeLeft--;
-          $('#time').text(timeLeft);
+          tiempoRestante--;
+          $('#time').text(tiempoRestante);
         }
       }, 1000);
     }
   
     // SIMULACIÓN DE CHAT
-    function startChatSimulation() {
+    function iniciarChat() {
       chatInterval = setInterval(function(){
-        // Selecciona aleatoriamente una opción de currentDraw.opciones
-        var randomIndex = Math.floor(Math.random() * currentDraw.opciones.length);
-        var guess = currentDraw.opciones[randomIndex];
+        var randomIndex = Math.floor(Math.random() * dibujoActual.opciones.length);
+        var dibujo = dibujoActual.opciones[randomIndex];
         
-        // Agrega la opción al chat
-        $(".chat").append("<p>Dibujo: " + guess + "</p>");
+        $(".chat").append("<p>Dibujo: " + dibujo + "</p>");
         
-        // Si la opción coincide con la asignada, la IA acierta
-        if (guess === currentDraw.opcion) {
-          endRound("ia");
+        //SI LA IA ACIERTA SE FINALIZA LA RONDA
+        if (dibujo === dibujoActual.opcion) {
+          acabarRonda("ia");
         }
       }, 5000);
     }
   
     // PINTAR EN EL CANVAS
-    function attachCanvasEvents() {
+    function pintarCanvas() {
       $canvas.off('mousedown mousemove mouseup mouseleave');
       $canvas.on('mousedown', function(e) {
-        if (timeLeft <= 0) return;
+        if (tiempoRestante <= 0) return;
         drawing = true;
         var rect = canvas.getBoundingClientRect();
         lastX = e.clientX - rect.left;
@@ -166,53 +162,53 @@ $(document).ready(function () {
       });
     }
   
-    // Función que inicia una ronda (reinicia timer, chat, canvas, etc.)
-    function startRound() {
-      currentDraw = seleccionarDibujo();
-      $('#drawItem').text(currentDraw.text);
-      timeLeft = 45;
-      $('#time').text(timeLeft);
+    //INICIAR RONDA
+    function iniciarRonda() {
+      dibujoActual = seleccionarDibujo();
+      $('#drawItem').text(dibujoActual.text);
+      tiempoRestante = 30;
+      $('#time').text(tiempoRestante);
       $(".chat").find("p").remove();
-      attachCanvasEvents();
+      pintarCanvas();
       iniciarContador();
-      startChatSimulation();
+      iniciarChat();
     }
   
-    // Función para iniciar el juego (reinicia rondas y puntuaciones)
-    function startGame() {
-      currentRound = 1;
-      totalScoreIA = 0;
-      totalScorePlayer = 0;
+    //INICIAR JUEGO
+    function iniciarJuego() {
+      rondaActual = 1;
+      puntuacionTotalIA = 0;
+      puntuacionTotalJugador = 0;
       $(".puntuaciones").empty();
       $(".totalPuntuacion").show();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      updateRoundDisplay();       // Muestra "1/maxRounds" al iniciar
-      updateTotalScoreDisplay();  // Actualiza la puntuación (inicialmente en 0)
-      startRound();
+      actualizarRondas();      
+      actualizarPuntuacionesTotales();  
+      iniciarRonda();
     }
   
-    // Inicia el juego al cargar la página
-    startGame();
-  
-    // BOTÓN DE RESET (reinicia la partida y muestra ronda 1)
+    //BOTON RESET 
     $('#reset').on('click', function() {
       clearInterval(timerInterval);
       clearInterval(chatInterval);
-      startGame();
+      iniciarJuego();
     });
   
-    // BOTÓN LIMPIAR
+    //BOTON LIMPIAR
     $("#limpiar").on('click', function () {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
   
-    // SELECCIONAR COLOR
+    //SELECCIONAR COLOR
     $('#colorRojo, #colorAmarillo, #colorAzul, #colorNegro, #colorRosa, #colorVerde, #colorMarron, #colorMorado').on('click', function(){
       colorActual = $(this).data('color');
     });
   
-    // SELECCIONAR ANCHO DEL TRAZO
+    //SELECCIONAR ANCHO
     $('#lineWidth').on('input change', function() {
       anchoTrazo = $(this).val();
     });
+
+
+    iniciarJuego();
 });
